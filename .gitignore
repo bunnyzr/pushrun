@@ -31,3 +31,12 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Worktrees / local scratch
+.worktrees/
+local/
+web/node_modules/
+web/tsconfig.tsbuildinfo
+/dist/
+# web/dist is committed on purpose (see docs/design.md): `go install` must
+# embed the built console without npm available.
