@@ -1,0 +1,46 @@
+# pushrun project definition for the hello-web demo service.
+# Import it with POST /api/v1/projects/import (see README.md "Quickstart").
+#
+# The git mount's repo param is the repo identity (host/path) you push to:
+# pushes land at <server>/git/localhost/hello-web.git and trigger this
+# project. For a real project, point repo at the git host/path (or a full
+# URL) of your repo; a repo nobody pushes through pushrun is seeded once
+# from that source remote (see git.scheme in the server config).
+schema: pushrun.project/v1
+name: hello-web
+display_name: Hello Web
+tree:
+  # The git mount receives the pushed source tree. `primary: true` marks it
+  # as the mount that tracks the triggering commit when no explicit trigger
+  # repo is given.
+  - path: app
+    mount:
+      provider: git
+      primary: true
+      params:
+        repo: localhost/hello-web
+        branch: main
+  # A second mount supplied by the example-static-runtime provider
+  # (examples/providers/example-static-runtime): its warmup phase builds a
+  # shared artifact once per version, its install phase places it here on
+  # every assembly.
+  - path: runtime
+    mount:
+      provider: example-static-runtime
+      params:
+        version: "1.0.0"
+pipeline:
+  - name: build
+    run: mkdir -p bin && cd app && go build -o ../bin/hello-web .
+    timeout: 300
+  - name: runtime-check
+    run: ./runtime/bin/example-runtime --version
+  # At most one background step, and it must be last: pushrun starts it as a
+  # supervised process and gates the run on its health check. CI_PORT is the
+  # port leased from the daemon's port pool for this instance.
+  - name: serve
+    run: mkdir -p logs && ./bin/hello-web -port "$CI_PORT" 2>&1 | tee -a logs/hello-web.log
+    background: true
+    health:
+      type: http
+      target: http://127.0.0.1:$CI_PORT/healthz
