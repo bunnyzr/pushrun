@@ -1,0 +1,18 @@
+?   	github.com/bunnyzr/pushrun/internal/fsutil	[no test files]
+?   	github.com/bunnyzr/pushrun/internal/testutil	[no test files]
+?   	github.com/bunnyzr/pushrun/cmd/pushrun	[no test files]
+?   	github.com/bunnyzr/pushrun/web	[no test files]
+ok  	github.com/bunnyzr/pushrun/internal/client	22.230s
+ok  	github.com/bunnyzr/pushrun/internal/config	1.097s
+ok  	github.com/bunnyzr/pushrun/internal/gitx	6.960s
+ok  	github.com/bunnyzr/pushrun/internal/hookclient	1.059s
+ok  	github.com/bunnyzr/pushrun/internal/instance	1.169s
+ok  	github.com/bunnyzr/pushrun/internal/logging	1.020s
+ok  	github.com/bunnyzr/pushrun/internal/project	1.061s
+ok  	github.com/bunnyzr/pushrun/internal/provider	2.357s
+--- FAIL: TestNamedPortsRenameReleasesOnStart (0.04s)
+    manager_test.go:1669: remove /var/folders/n6/hn37q6pj7sj_9dmqqc2113800000gn/T/TestNamedPortsRenameReleasesOnStart1226847982/001/instances/demo/main/bg-ports.txt: no such file or directory
+FAIL
+FAIL	github.com/bunnyzr/pushrun/internal/run	10.080s
+ok  	github.com/bunnyzr/pushrun/internal/server	32.642s
+FAIL
