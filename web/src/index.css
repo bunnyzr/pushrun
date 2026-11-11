@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+/* The committed build output in web/dist must never feed Tailwind's
+   automatic content detection, or builds would harvest utility classes
+   from the previous build and committed CSS would not be reproducible. */
+@source not "../dist";
+
+@theme {
+  /* Console palette: airy slate surfaces with a fresh blue action color.
+     Large surfaces stay near-white; blue is reserved for primary actions,
+     selection and focus. Red is only destructive/error. */
+  --color-background: #f8fafc;
+  --color-foreground: #1e293b;
+  --color-card: #ffffff;
+  --color-card-foreground: #1e293b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1e293b;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #1e293b;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #5b6775;
+  --color-accent: #dbeafe;
+  --color-accent-foreground: #1e293b;
+  --color-destructive: #b91c1c;
+  --color-border: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-input: #84909f;
+  --color-ring: #2563eb;
+
+  /* Status tones (badge + alert surfaces). */
+  --color-success: #15803d;
+  --color-success-bg: #dcfce7;
+  --color-success-border: #86efac;
+  --color-warning: #b45309;
+  --color-warning-bg: #fef3c7;
+  --color-warning-border: #fcd34d;
+  --color-danger-bg: #fee2e2;
+  --color-danger-border: #fecaca;
+
+  /* Log surface: light, matched to the console instead of a dark terminal. */
+  --color-log: #ffffff;
+  --color-log-foreground: #1e293b;
+  --color-log-muted: #64748b;
+  --color-log-line: #e2e8f0;
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --shadow-sm: 0 1px 0 rgb(31 35 40 / 0.04);
+  --shadow-lg: 0 12px 32px rgb(31 35 40 / 0.12);
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-foreground;
+    line-height: 1.5;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-ring) 20%, transparent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[11px] font-semibold tracking-[0.02em] text-muted-foreground;
+  }
+  .panel {
+    @apply rounded-md border bg-card;
+  }
+  .data-mono {
+    @apply font-mono tabular-nums;
+  }
+}
+
+/* Small overlay menus scale in from their trigger. */
+.menu-panel {
+  transform-origin: top right;
+  animation: menu-in 120ms ease-out;
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel {
+    animation: none;
+  }
+}
+
+/* The console is a split pane on desktop and a list -> detail flow on
+   narrow screens. Only one pane is visible at a time on mobile. */
+
+@media (min-width: 768px) {
+  .console-shell.sidebar-collapsed .console-sidebar,
+  .console-shell.sidebar-collapsed .console-divider {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .console-shell {
+    flex-direction: column;
+  }
+  .console-sidebar {
+    width: 100% !important;
+    max-height: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    border-right-width: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .console-content {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+  .console-shell.detail-active .console-sidebar {
+    display: none;
+  }
+  .console-shell:not(.detail-active) .console-content {
+    display: none;
+  }
+  .console-divider {
+    display: none;
+  }
+  .console-content {
+    padding-bottom: 1rem;
+  }
+}

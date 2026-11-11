@@ -1,0 +1,23 @@
+schema: pushrun.provider/v1
+id: example-static-runtime
+name: Example Static Runtime
+description: >-
+  A self-contained example provider. Its warmup phase "builds" a fake
+  runtime (an executable shell script) into the shared cache dir, and its
+  install phase copies or symlinks it into an instance. It needs no network
+  and demonstrates both lifecycle phases, parameter scoping, and the
+  fingerprinted warmup cache.
+warmup: scripts/warmup.sh
+install: scripts/install.sh
+parameters:
+  - id: version
+    label: Runtime version
+    type: string
+    scope: warmup
+    required: true
+    default: "1.0.0"
+  - id: link
+    label: Symlink instead of copy
+    type: boolean
+    scope: install
+    default: "false"
